@@ -1,0 +1,103 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-input/paper-input-behavior.html">
+
+<script>
+  /**
+   * Use `Polymer.PaperInputBehavior` to implement inputs with `<paper-input-container>`. This
+   * behavior is implemented by `<paper-input>`. It exposes a number of properties from
+   * `<paper-input-container>` and `<input is="iron-input">` and they should be bound in your
+   * template.
+   *
+   * The input element can be accessed by the `inputElement` property if you need to access
+   * properties or methods that are not exposed.
+   * @polymerBehavior Polymer.PaperInputBehavior
+   */
+  Polymer.PaperInputUnitBehaviorImpl = {
+    properties: {
+      /**
+       * Factor to use when calculating the output value.
+       */
+      displayFactor: {
+        type: Number,
+        value: 1
+      },
+      /**
+       * Array of unit affixes.
+       */
+      units: {
+        type: Array
+      },
+      /**
+       * String prefix.
+       */
+      prefix: {
+        type: String
+      },
+      /**
+       * String suffix.
+       */
+      suffix: {
+        type: String
+      },
+      /**
+       * Selected unit.
+       */
+      selectedUnit: {
+        type: Number,
+        value: 0
+      },
+      /**
+       * Multiplier to use when calculating the output value based on the selected unit.
+       */
+      unitMultiplier: {
+        type: Number,
+        value: 1000
+      },
+      
+      outputValue: {
+        type: String,
+        // when `value`, `selectedUnit`, or `unitMultiplier` change, `computeOutput`
+        // is called and the value it returns is stored as `outputValue`
+        computed: 'computeOutput(value, selectedUnit, unitMultiplier)'
+      },
+      
+      selectedUnitLabel: {
+        type: String,
+        computed: 'getUnitLabel(selectedUnit, units)'
+      }
+    },
+    
+    getUnitLabel: function(selectedUnit, units) {
+      return units[selectedUnit];
+    },
+    
+    computeOutput: function(value, selectedUnit, unitMultiplier) {
+      if (this.type !== 'number')
+        return value;
+      return '' + (Number(value) * this.displayFactor * Math.pow(Number(unitMultiplier), Number(selectedUnit)));
+    },
+    
+    /**
+     * Returns a reference to the hidden element.
+     */
+    get hiddenElement() {
+      return this.$.output;
+    },
+  };
+
+  /** @polymerBehavior */
+  Polymer.PaperInputUnitBehavior = [
+    Polymer.PaperInputBehavior,
+    Polymer.PaperInputUnitBehaviorImpl
+  ];
+</script>

@@ -1,5 +1,5 @@
 {
-  "name": "paper-input",
+  "name": "paper-input-unit",
   "version": "1.1.5",
   "description": "Material design text fields",
   "authors": [
@@ -11,13 +11,8 @@
     "input"
   ],
   "main": [
-    "paper-input.html",
-    "paper-textarea.html",
-    "paper-input-behavior.html",
-    "paper-input-container.html",
-    "paper-input-error.html",
-    "paper-input-addon-behavior.html",
-    "paper-input-char-counter.html"
+    "paper-input-unit.html",
+    "paper-input-unit-behavior.html"
   ],
   "private": true,
   "repository": {
