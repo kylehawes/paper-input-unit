@@ -11,12 +11,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
 <link rel="import" href="../iron-validatable-behavior/iron-validatable-behavior.html">
-<link rel="import" href="paper-input-unit-behavior.html">
 <link rel="import" href="../paper-input/paper-input-char-counter.html">
 <link rel="import" href="../paper-input/paper-input-container.html">
 <link rel="import" href="../paper-input/paper-input-error.html">
 <link rel="import" href="../paper-menu/paper-menu.html">
 <link rel="import" href="../paper-menu-button/paper-menu-button.html">
+<link rel="import" href="paper-input-unit-behavior.html">
 
 <!--
 Material design: [Text fields](https://www.google.com/design/spec/components/text-fields.html)
@@ -167,15 +167,15 @@ style this element.
 
     </paper-input-container>
   </template>
+  
+  <script>
+    Polymer({
+      is: 'paper-input-unit',
+
+      behaviors: [
+        Polymer.IronFormElementBehavior,
+        Polymer.PaperInputUnitBehavior
+      ]
+    });
+  </script>
 </dom-module>
-
-<script>
-  Polymer({
-    is: 'paper-input-unit',
-
-    behaviors: [
-      Polymer.IronFormElementBehavior,
-      Polymer.PaperInputUnitBehavior
-    ]
-  });
-</script>
