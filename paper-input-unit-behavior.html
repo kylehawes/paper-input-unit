@@ -84,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     computeOutput: function(value, selectedUnit) {
       if (this.type !== 'number')
         return value;
-      if (this.displayFactor && this.displayFactor.length > selectedUnit)
+      if (_useDisplayFactor(selectedUnit))
         return '' + (Number(value) * Number(this.displayFactor[selectedUnit]));
       // Assume SI prefix:
       return '' + (Number(value) * Math.pow(1000, selectedUnit));
@@ -97,7 +97,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return this.$.output;
     },
     
-    _useDisplayFactor: function(value, selectedUnit) {
+    _useDisplayFactor: function(selectedUnit) {
+      return this.displayFactor && this.displayFactor.length > selectedUnit;
+    }
   };
 
   /** @polymerBehavior */
