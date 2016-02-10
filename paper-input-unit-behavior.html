@@ -28,8 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * Factor to use when calculating the output value.
        */
       displayFactor: {
-        type: Number,
-        value: 1
+        type: Array
       },
       /**
        * Array of unit affixes.
@@ -56,35 +55,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         type: Number,
         value: 0
       },
-      /**
-       * Multiplier to use when calculating the output value based on the selected unit.
-       */
-      unitMultiplier: {
-        type: Number,
-        value: 1000
-      },
       
       outputValue: {
         type: String,
-        // when `value`, `selectedUnit`, or `unitMultiplier` change, `computeOutput`
+        // when `value` or `selectedUnit` change, `computeOutput`
         // is called and the value it returns is stored as `outputValue`
-        computed: 'computeOutput(value, selectedUnit, unitMultiplier)'
+        computed: 'computeOutput(value, selectedUnit)'
       },
       
       selectedUnitLabel: {
         type: String,
-        computed: 'getUnitLabel(selectedUnit, units)'
+        computed: 'getUnitLabel(units, selectedUnit)'
       }
     },
     
-    getUnitLabel: function(selectedUnit, units) {
+    getUnitLabel: function(units, selectedUnit) {
       return units[selectedUnit];
     },
     
-    computeOutput: function(value, selectedUnit, unitMultiplier) {
+    _getUnitIndex: function(unitLabel) {
+      return unitLabel.indexOf('{0}');
+    },
+    
+    getUnitSuffix: function(unitLabel) {
+      return unitLabel.substring(_getUnitIndex(unitLabel) + 3);
+    },
+    
+    computeOutput: function(value, selectedUnit) {
       if (this.type !== 'number')
         return value;
-      return '' + (Number(value) * this.displayFactor * Math.pow(Number(unitMultiplier), Number(selectedUnit)));
+      if (this.displayFactor && this.displayFactor.length > selectedUnit)
+        return '' + (Number(value) * Number(this.displayFactor[selectedUnit]));
+      // Assume SI prefix:
+      return '' + (Number(value) * Math.pow(1000, selectedUnit));
     },
     
     /**
@@ -93,6 +96,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     get hiddenElement() {
       return this.$.output;
     },
+    
+    _useDisplayFactor: function(value, selectedUnit) {
   };
 
   /** @polymerBehavior */

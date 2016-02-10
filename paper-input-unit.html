@@ -71,7 +71,6 @@ style this element.
 
 <dom-module id="paper-input-unit">
   <template>
-    <style include="paper-menu-shared-styles"></style>
     <style>
       :host {
         display: block;
@@ -147,12 +146,12 @@ style this element.
         <paper-menu-button suffix>
           <div class="dropdown-trigger">
             <paper-ripple></paper-ripple>
-            [[selectedUnitLabel]]
+            [[getUnitSuffix(selectedUnitLabel)]]
             <iron-icon icon="arrow-drop-down" suffix></iron-icon>
           </div>
           <paper-menu selected="{{selectedUnit}}" class="dropdown-content">
             <template is="dom-repeat" items="{{units}}">
-              <paper-item>{{item}}</paper-item>
+              <paper-item>{{getUnitSuffix(item)}}</paper-item>
             </template>
           </paper-menu>
         </paper-menu-button>
