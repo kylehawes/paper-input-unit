@@ -13,14 +13,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <script>
   /**
-   * Use `Polymer.PaperInputBehavior` to implement inputs with `<paper-input-container>`. This
+   * Use `Polymer.PaperInputUnitBehavior` to implement inputs with `<paper-input-container>`. This
    * behavior is implemented by `<paper-input>`. It exposes a number of properties from
    * `<paper-input-container>` and `<input is="iron-input">` and they should be bound in your
    * template.
    *
    * The input element can be accessed by the `inputElement` property if you need to access
    * properties or methods that are not exposed.
-   * @polymerBehavior Polymer.PaperInputBehavior
+   * @polymerBehavior Polymer.PaperInputUnitBehavior
    */
   Polymer.PaperInputUnitBehaviorImpl = {
     properties: {
@@ -35,6 +35,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        */
       units: {
         type: Array
+      },
+      /**
+       * String affix.
+       */
+      affix: {
+        type: String,
+        observer: '_affixChanged'
       },
       /**
        * String prefix.
@@ -68,6 +75,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         computed: 'getUnitLabel(units, selectedUnit)'
       }
     },
+
+    _affixChanged: function(newValue, oldValue) {
+      this.prefix = this.getUnitPrefix(newValue);
+      this.suffix = this.getUnitSuffix(newValue);
+    },
     
     getUnitLabel: function(units, selectedUnit) {
       return units[selectedUnit];
@@ -77,14 +89,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return unitLabel.indexOf('{0}');
     },
     
+    getUnitPrefix: function(unitLabel) {
+      return unitLabel.substring(0, this._getUnitIndex(unitLabel));
+    },
+    
     getUnitSuffix: function(unitLabel) {
-      return unitLabel.substring(_getUnitIndex(unitLabel) + 3);
+      return unitLabel.substring(this._getUnitIndex(unitLabel) + 3);
+    },
+    
+    _useDisplayFactor: function(selectedUnit) {
+      return this.displayFactor && this.displayFactor.length > selectedUnit;
     },
     
     computeOutput: function(value, selectedUnit) {
       if (this.type !== 'number')
         return value;
-      if (_useDisplayFactor(selectedUnit))
+      if (this._useDisplayFactor(selectedUnit))
         return '' + (Number(value) * Number(this.displayFactor[selectedUnit]));
       // Assume SI prefix:
       return '' + (Number(value) * Math.pow(1000, selectedUnit));
@@ -95,10 +115,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      */
     get hiddenElement() {
       return this.$.output;
-    },
-    
-    _useDisplayFactor: function(selectedUnit) {
-      return this.displayFactor && this.displayFactor.length > selectedUnit;
     }
   };
 
