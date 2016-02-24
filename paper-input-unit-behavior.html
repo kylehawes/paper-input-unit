@@ -25,12 +25,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   Polymer.PaperInputUnitBehaviorImpl = {
     properties: {
       /**
-       * String for the name attribute of the hidden input.
-       */
-      hiddenName: {
-        type: String
-      },
-      /**
        * Factor to use when calculating the output value.
        */
       displayFactor: {
@@ -69,17 +63,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         value: 0
       },
       
-      outputValue: {
-        type: String,
-        // when `value` or `selectedUnit` change, `computeOutput`
-        // is called and the value it returns is stored as `outputValue`
-        computed: 'computeOutput(value, selectedUnit)'
-      },
-      
       selectedUnitLabel: {
         type: String,
         computed: 'getUnitLabel(units, selectedUnit)'
+      },
+      
+      inputValue: {
+        type: String,
+        notify: true
       }
+    },
+
+    // Modify iron-form-element-behavior's value whenever the text inputValue changes.
+    observers: [
+      '_convertInput(inputValue, displayFactor, selectedUnit)'
+    ],
+
+    _convertInput: function(inputValue, displayFactor, selectedUnit) {
+      this.value = this.computeOutput(inputValue, displayFactor, selectedUnit);
     },
 
     _affixChanged: function(newValue, oldValue) {
@@ -107,20 +108,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return this.displayFactor && this.displayFactor.length > selectedUnit;
     },
     
-    computeOutput: function(value, selectedUnit) {
+    computeOutput: function(inputValue, displayFactor, selectedUnit) {
       if (this.type !== 'number')
-        return value;
+        return inputValue;
       if (this._useDisplayFactor(selectedUnit))
-        return '' + (Number(value) * Number(this.displayFactor[selectedUnit]));
+        return '' + (Number(inputValue) * Number(displayFactor[selectedUnit]));
       // Assume SI prefix:
-      return '' + (Number(value) * Math.pow(1000, selectedUnit));
-    },
-    
-    /**
-     * Returns a reference to the hidden element.
-     */
-    get hiddenElement() {
-      return this.$.output;
+      return '' + (Number(inputValue) * Math.pow(1000, selectedUnit));
     }
   };
 

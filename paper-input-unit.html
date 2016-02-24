@@ -101,14 +101,13 @@ style this element.
       <content select="[prefix]"></content>
 
       <label hidden$="[[!label]]">[[label]]</label>
-      <input id="output" type="hidden" name$="[[hiddenName]]" value="{{outputValue}}">
 
       <input is="iron-input" id="input"
         aria-labelledby$="[[_ariaLabelledBy]]"
         aria-describedby$="[[_ariaDescribedBy]]"
         disabled$="[[disabled]]"
         title$="[[title]]"
-        bind-value="{{value}}"
+        bind-value="{{inputValue}}"
         invalid="{{invalid}}"
         prevent-invalid-input="[[preventInvalidInput]]"
         allowed-pattern="[[allowedPattern]]"
