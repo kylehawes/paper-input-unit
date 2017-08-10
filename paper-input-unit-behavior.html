@@ -63,12 +63,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         type: Number,
         value: 0
       },
-      
+
       selectedUnitLabel: {
         type: String,
         computed: 'getUnitLabel(units, selectedUnit)'
       },
-      
+
       inputValue: {
         type: String,
         notify: true
@@ -88,30 +88,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       this.prefix = this.getUnitPrefix(newValue);
       this.suffix = this.getUnitSuffix(newValue);
     },
-    
+
     getUnitLabel: function(units, selectedUnit) {
       return units[selectedUnit];
     },
-    
+
     _getUnitIndex: function(unitLabel) {
       return unitLabel.indexOf('{0}');
     },
-    
+
     getUnitPrefix: function(unitLabel) {
       return unitLabel.substring(0, this._getUnitIndex(unitLabel));
     },
-    
+
     getUnitSuffix: function(unitLabel) {
       return unitLabel.substring(this._getUnitIndex(unitLabel) + 3);
     },
-    
+
     _useDisplayFactor: function(selectedUnit) {
       return this.displayFactor && this.displayFactor.length > selectedUnit;
     },
-    
+
     computeOutput: function(inputValue, displayFactor, selectedUnit) {
-      if (this.type !== 'number')
-        return inputValue;
+      // 'number' requires use of step size, so avoid enforcing this type.
+      // if (this.type !== 'number')
+      //   return inputValue;
       if (this._useDisplayFactor(selectedUnit))
         return '' + (Number(inputValue) * Number(displayFactor[selectedUnit]));
       // Assume SI prefix:
