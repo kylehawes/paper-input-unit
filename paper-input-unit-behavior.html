@@ -113,6 +113,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // 'number' requires use of step size, so avoid enforcing this type.
       // if (this.type !== 'number')
       //   return inputValue;
+      // if the field is 'text' don't do any conversions
+      if (this.type == 'text')
+        return inputValue;
       if (this._useDisplayFactor(selectedUnit))
         return '' + (Number(inputValue) * Number(displayFactor[selectedUnit]));
       // Assume SI prefix:
